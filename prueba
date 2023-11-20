@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: mi_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: tu_contraseña_root
+      MONGO_INITDB_DATABASE: mi_basededatos
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+    command: mongod --auth
+
+  create-user:
+    image: mongo:latest
+    depends_on:
+      - mongodb
+    command: >
+      mongo admin --host mongodb --eval '
+        db.createUser({
+          user: "admlinux",
+          pwd: "tu_contraseña_admlinux",
+          roles: [{ role: "readWrite", db: "mi_basededatos" }]
+        })
+      '
