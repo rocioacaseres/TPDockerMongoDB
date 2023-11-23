@@ -5,26 +5,12 @@ services:
     image: mongo:latest
     restart: always
     container_name: mi_mongo
-    hostname: host_mongo
+    hostname: host_mongo  
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 1234
-      MONGO_INITDB_DATABASE: mi_basededatos
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: mi_basededatos 
     volumes:
       - ./data:/data/db
     ports:
       - "27017:27017"
-    command: mongod --auth
-
-  create-user:
-    image: mongo:latest
-    depends_on:
-      - mongodb
-    command: >
-      mongo admin --host mongodb --eval '
-        db.createUser({
-          user: "admlinux",
-          pwd: "1502",
-          roles: [{ role: "readWrite", db: "mi_basededatos" }]
-        })
-      '
